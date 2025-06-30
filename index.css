@@ -93,6 +93,7 @@ main {
 
 i {
     color: #3C3C3C;
+    cursor: pointer;
 }
 
 /* order */
@@ -125,6 +126,7 @@ i {
     font-weight: 400;
     font-size: 12px;
     margin-bottom: -5px;
+    cursor: pointer;
 }
 
 .order-item-price,
@@ -147,6 +149,16 @@ i {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     width: 100%;
     border-radius: 4px;
+    cursor: pointer;
+}
+
+.order-done {
+    background: #ECFDF5;
+    color: #065F46;
+    padding: 30px 0;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 1.25rem;
 }
 
 /* pay modal */
