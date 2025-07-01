@@ -7,6 +7,7 @@ let orderListItems = []
 document.addEventListener('DOMContentLoaded', render)
 document.getElementById('complete-order-btn').addEventListener('click', function () {
     document.getElementById('modal').style.display = 'flex'
+    document.getElementById('name').focus()
 })
 document.getElementById('pay-btn').addEventListener('click', paymentProcess)
 
@@ -46,45 +47,28 @@ function getTotalPrice() {
 }
 
 // payment processing
-function paymentProcess() {
-    const name = validName()
-    const cardNumber = validCardNumber()
-    const cvv = validCvv()
+function paymentProcess(e) {
+    e.preventDefault()
 
-    if (name && cardNumber && cvv) {
+    // fiels values
+    const result = inputsPatterns.map((inputObj) => {
+        return validInput(inputObj.input, inputObj.regex)
+    })
+
+    if (result.includes(false)) {
+        document.getElementById('pay-btn').disabled = true
+    } else {
+        document.getElementById('pay-btn').disabled = false
         closeModal()
-        const orderConatainer = document.getElementById('order-container')
-        orderConatainer.innerHTML = `<p>Thanks, ${name}! Your order is on its way!</p>`
-        orderConatainer.classList.add('order-done')
+
+        document.getElementById('order-container').innerHTML = `<div class='order-done'>
+            <p>Thanks, ${inputsPatterns[0].input.value}! Your order is on its way!</p>
+        </div>`
+
     }
+
 }
 
-// validate on name
-function validName() {
-    const name = document.getElementById('name').value
-    if (name.length >= 3) {
-        return name
-    }
-    return window.alert("Name: Should be more than 3 characters!!")
-}
-
-// validate on card number
-function validCardNumber() {
-    const cardNumber = document.getElementById('card-number').value
-    if (cardNumber.length === 16) {
-        return cardNumber
-    }
-    return window.alert("Card Number: Should be 16 number!!")
-}
-
-// validate on cvv
-function validCvv() {
-    const cvv = document.getElementById('cvv').value
-    if (cvv.length === 3) {
-        return cvv
-    }
-    return window.alert("CVV: Should be 3 numbers!!")
-}
 // get order html
 function getOrderItemsListHtml() {
     return orderListItems.map(function (item) {
@@ -137,16 +121,54 @@ function render() {
 }
 
 
+// return array of object each object have the input element and acceptance value pattern(regex)
+function getInputsPatternsArr() {
+    const patterns = [/^[a-zA-Z ]{3,20}$/, /^\d{16}$/, /^\d{3}$/]
+    const inputs = [...document.getElementsByTagName('input')] // turn html collection into array
 
-// inputs criteria restrictions
-document.getElementById('name').addEventListener('input', function () {
-    this.value = this.value.replace(/[^a-zA-Z ]/g, '')
-})
+    return inputs.map((inputEl, index) => {
+        return {
+            input: inputEl,
+            regex: patterns[index]
+        }
+    })
+}
 
-document.getElementById('card-number').addEventListener('input', function () {
-    this.value = this.value.replace(/[^0-9]/g, '')
-})
+// validation of input
+function validInput(inputEl, pattern) {
+    return pattern.test(inputEl.value)
+}
 
-document.getElementById('cvv').addEventListener('input', function () {
-    this.value = this.value.replace(/[^0-9]/g, '')
+// show input status
+function showInputStatus(inputEl, pattern, touched) {
+    inputEl.className = 'normal'
+    let helpEl = inputEl.parentElement.querySelector('.help')
+
+    if (touched) {
+        const inputClass = validInput(inputEl, pattern) ? 'input-success' : 'input-error'
+
+        inputEl.classList.replace(inputEl.className, inputClass)
+
+        if (validInput(inputEl, pattern)) {
+            helpEl.classList.remove('help-error')
+            helpEl.classList.add('help-success')
+        } else {
+            helpEl.classList.remove('help-success')
+            helpEl.classList.add('help-error')
+        }
+
+    }
+}
+
+// array of inputs with their regex
+const inputsPatterns = getInputsPatternsArr()
+
+// event listener for each input while entering the values of inputs
+inputsPatterns.forEach((inputObj) => {
+    inputObj.input.addEventListener('input', () => {
+        // console.log(validInput(inputObj.input, inputObj.regex))
+        // here will show the status of input if the user click on the feild(touched = true)
+        const touched = document.activeElement === inputObj.input
+        showInputStatus(inputObj.input, inputObj.regex, touched)
+    })
 })

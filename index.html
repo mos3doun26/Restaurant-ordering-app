@@ -45,11 +45,20 @@
         <div class="modal-inner">
             <p class="modal-head">Enter card details</p>
             <form>
-                <input type="text" id="name" name="name" placeholder="Enter your name" maxlength="20" minlength="3"
-                    required>
-                <input type="text" id="card-number" name="card-number" placeholder="Enter card number" size="16"
-                    maxlength="16" required>
-                <input type="text" id="cvv" name="cvv" placeholder="Enter CVV" size="3" maxlength="3" required>
+                <div>
+                    <input type="text" id="name" name="name" placeholder="Enter your name" maxlength="20" minlength="3"
+                        required>
+                    <p class="help">Name should be at least 3 letters.</p>
+                </div>
+                <div>
+                    <input type="text" id="card-number" name="card-number" placeholder="Enter card number" size="16"
+                        maxlength="16" required>
+                    <p class="help">Card number should be 16 number.</p>
+                </div>
+                <div>
+                    <input type="text" id="cvv" name="cvv" placeholder="Enter CVV" size="3" maxlength="3" required>
+                    <p class="help">CVV should be 3 numbers.</p>
+                </div>
             </form>
             <button class="pay-btn" id="pay-btn">Pay</button>
         </div>

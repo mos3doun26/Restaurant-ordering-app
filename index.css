@@ -27,7 +27,7 @@ h3 {
 /* layout */
 body {
     width: 500px;
-    margin: 0 auto;
+    margin: 0 auto 30px auto;
 }
 
 header {
@@ -201,4 +201,31 @@ input {
     width: 100%;
     margin-bottom: 10px;
     box-sizing: border-box;
+}
+
+.normal-input {
+    border: 1px solid #DEDEDE;
+}
+
+.input-success {
+    border: 1px solid #16DB99;
+}
+
+.input-error {
+    border: 1px solid red;
+}
+
+.help {
+    font-size: 0.75rem;
+    color: #8B8B8B;
+    text-align: start;
+    margin: 0 0 10px 10px;
+}
+
+.help-success {
+    color: #16DB99;
+}
+
+.help-error {
+    color: red;
 }
