@@ -134,6 +134,11 @@ i {
     margin-left: auto;
 }
 
+.discount {
+    text-decoration: line-through;
+    color: #BBBBBB;
+}
+
 .total {
     margin: 10px 0 35px 0;
 }

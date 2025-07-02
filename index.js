@@ -46,27 +46,28 @@ function getTotalPrice() {
     }, 0)
 }
 
+// meal discount
+function totalPriceAfterDiscount(percentage) {
+    if (orderListItems.length > 1) {
+        return getTotalPrice() - (getTotalPrice() * percentage / 100)
+    }
+}
+
 // payment processing
 function paymentProcess(e) {
     e.preventDefault()
 
-    // fiels values
-    const result = inputsPatterns.map((inputObj) => {
-        return validInput(inputObj.input, inputObj.regex)
+    // validation of fiels values
+    let validations = inputsPatterns.map((inputObj) => {
+        return inputObj.regex.test(inputObj.input.value)
     })
 
-    if (result.includes(false)) {
-        document.getElementById('pay-btn').disabled = true
-    } else {
-        document.getElementById('pay-btn').disabled = false
+    if (!validations.includes(false)) {
         closeModal()
-
         document.getElementById('order-container').innerHTML = `<div class='order-done'>
             <p>Thanks, ${inputsPatterns[0].input.value}! Your order is on its way!</p>
         </div>`
-
     }
-
 }
 
 // get order html
@@ -85,7 +86,13 @@ function renderOrder() {
     if (orderListItems.length !== 0) {
         document.getElementById('order-container').style.display = 'flex'
         document.getElementById('order-list').innerHTML = getOrderItemsListHtml()
-        document.getElementById('total-price').textContent = `$${getTotalPrice()}`
+        const totalWithDiscount = totalPriceAfterDiscount(10)
+        if (totalWithDiscount) {
+            document.getElementById('total-price').innerHTML = `$${totalWithDiscount} <span class='discount'>$${getTotalPrice()}</span>`
+
+        } else {
+            document.getElementById('total-price').textContent = `$${getTotalPrice()}`
+        }
     } else {
         document.getElementById('order-container').style.display = 'none'
     }
@@ -166,7 +173,6 @@ const inputsPatterns = getInputsPatternsArr()
 // event listener for each input while entering the values of inputs
 inputsPatterns.forEach((inputObj) => {
     inputObj.input.addEventListener('input', () => {
-        // console.log(validInput(inputObj.input, inputObj.regex))
         // here will show the status of input if the user click on the feild(touched = true)
         const touched = document.activeElement === inputObj.input
         showInputStatus(inputObj.input, inputObj.regex, touched)
